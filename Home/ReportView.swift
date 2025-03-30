@@ -19,8 +19,8 @@ struct ReportView: View {
             
             // Issue Type Selection
             VStack(alignment: .leading, spacing: 12) {
-                Text("Issue Type")
-                    .font(.headline)
+                
+        
                 
                 LazyVGrid(columns: [
                     GridItem(.flexible()),
