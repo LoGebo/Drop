@@ -10,6 +10,15 @@
 		A306AE342D98C30B00F17A7C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE332D98C30B00F17A7C /* HomeView.swift */; };
 		A306AE362D98C33B00F17A7C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE352D98C33B00F17A7C /* HomeViewModel.swift */; };
 		A306AE382D98C34900F17A7C /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE372D98C34900F17A7C /* HomeModel.swift */; };
+		A306AE3B2D98CE0000F17A7C /* AlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE3A2D98CE0000F17A7C /* AlertsView.swift */; };
+		A306AE3D2D98CE0F00F17A7C /* AlertsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE3C2D98CE0F00F17A7C /* AlertsModel.swift */; };
+		A306AE3F2D98CE2400F17A7C /* AlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE3E2D98CE2400F17A7C /* AlertsViewModel.swift */; };
+		A306AE432D98D00400F17A7C /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE422D98D00400F17A7C /* UserView.swift */; };
+		A306AE452D98D01000F17A7C /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE442D98D01000F17A7C /* UserModel.swift */; };
+		A306AE472D98D02300F17A7C /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE462D98D02300F17A7C /* UserViewModel.swift */; };
+		A306AE4A2D98D20F00F17A7C /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE492D98D20F00F17A7C /* RoutesView.swift */; };
+		A306AE4C2D98D21F00F17A7C /* RoutesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */; };
+		A306AE4E2D98D22C00F17A7C /* RoutesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +45,15 @@
 		A306AE332D98C30B00F17A7C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A306AE352D98C33B00F17A7C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		A306AE372D98C34900F17A7C /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		A306AE3A2D98CE0000F17A7C /* AlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsView.swift; sourceTree = "<group>"; };
+		A306AE3C2D98CE0F00F17A7C /* AlertsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsModel.swift; sourceTree = "<group>"; };
+		A306AE3E2D98CE2400F17A7C /* AlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsViewModel.swift; sourceTree = "<group>"; };
+		A306AE422D98D00400F17A7C /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		A306AE442D98D01000F17A7C /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		A306AE462D98D02300F17A7C /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		A306AE492D98D20F00F17A7C /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
+		A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesViewModel.swift; sourceTree = "<group>"; };
+		A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -84,6 +102,9 @@
 		A306ADFA2D98C2CC00F17A7C = {
 			isa = PBXGroup;
 			children = (
+				A306AE482D98D1FA00F17A7C /* Routes */,
+				A306AE402D98CFE400F17A7C /* User */,
+				A306AE392D98CDEC00F17A7C /* Alerts */,
 				A306AE322D98C2FA00F17A7C /* Home */,
 				A306AE052D98C2CC00F17A7C /* Drop */,
 				A306AE162D98C2CD00F17A7C /* DropTests */,
@@ -110,6 +131,36 @@
 				A306AE372D98C34900F17A7C /* HomeModel.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		A306AE392D98CDEC00F17A7C /* Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				A306AE3A2D98CE0000F17A7C /* AlertsView.swift */,
+				A306AE3C2D98CE0F00F17A7C /* AlertsModel.swift */,
+				A306AE3E2D98CE2400F17A7C /* AlertsViewModel.swift */,
+			);
+			path = Alerts;
+			sourceTree = "<group>";
+		};
+		A306AE402D98CFE400F17A7C /* User */ = {
+			isa = PBXGroup;
+			children = (
+				A306AE422D98D00400F17A7C /* UserView.swift */,
+				A306AE442D98D01000F17A7C /* UserModel.swift */,
+				A306AE462D98D02300F17A7C /* UserViewModel.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		A306AE482D98D1FA00F17A7C /* Routes */ = {
+			isa = PBXGroup;
+			children = (
+				A306AE492D98D20F00F17A7C /* RoutesView.swift */,
+				A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */,
+				A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */,
+			);
+			path = Routes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +308,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				A306AE342D98C30B00F17A7C /* HomeView.swift in Sources */,
+				A306AE472D98D02300F17A7C /* UserViewModel.swift in Sources */,
+				A306AE4E2D98D22C00F17A7C /* RoutesModel.swift in Sources */,
+				A306AE4A2D98D20F00F17A7C /* RoutesView.swift in Sources */,
 				A306AE382D98C34900F17A7C /* HomeModel.swift in Sources */,
 				A306AE362D98C33B00F17A7C /* HomeViewModel.swift in Sources */,
+				A306AE3B2D98CE0000F17A7C /* AlertsView.swift in Sources */,
+				A306AE3D2D98CE0F00F17A7C /* AlertsModel.swift in Sources */,
+				A306AE432D98D00400F17A7C /* UserView.swift in Sources */,
+				A306AE4C2D98D21F00F17A7C /* RoutesViewModel.swift in Sources */,
+				A306AE452D98D01000F17A7C /* UserModel.swift in Sources */,
+				A306AE3F2D98CE2400F17A7C /* AlertsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
