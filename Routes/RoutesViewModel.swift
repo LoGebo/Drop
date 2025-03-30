@@ -98,23 +98,30 @@ class RoutesViewModel: NSObject, ObservableObject {
         await fetchRoute(from: origin, to: destination)
     }
     
+    private func roundCoordinate(_ coordinate: Double) -> Double {
+        return (coordinate * 1000000).rounded() / 1000000
+    }
+    
     func fetchRoute(from origin: Location, to destination: Location) async {
         isLoading = true
         error = nil
         
         do {
-            // Reduce coordinate precision to 6 decimal places
+            let roundedOrigin = Location(
+                latitude: roundCoordinate(origin.latitude),
+                longitude: roundCoordinate(origin.longitude)
+            )
+            
+            let roundedDestination = Location(
+                latitude: roundCoordinate(destination.latitude),
+                longitude: roundCoordinate(destination.longitude)
+            )
+            
             let request = RouteRequest(
-                origin: Location(
-                    latitude: Double(String(format: "%.6f", origin.latitude)) ?? origin.latitude,
-                    longitude: Double(String(format: "%.6f", origin.longitude)) ?? origin.longitude
-                ),
-                destination: Location(
-                    latitude: Double(String(format: "%.6f", destination.latitude)) ?? destination.latitude,
-                    longitude: Double(String(format: "%.6f", destination.longitude)) ?? destination.longitude
-                ),
+                origin: roundedOrigin,
+                destination: roundedDestination,
                 transportTypes: [.WALK, .METRO, .BUS, .MINIBUS],
-                maxWalkingDistance: 500,
+                maxWalkingDistance: 2000,
                 routePreference: .FASTEST
             )
             
