@@ -7,65 +7,104 @@
 
 import Foundation
 
-struct TransitRoute: Identifiable {
-    let id = UUID()
-    let from: String
-    let to: String
-    let totalTime: Int
-    let price: Double
-    let co2Saved: Double
-    let segments: [RouteSegment]
-    let tag: RouteTag?
+// MARK: - API Models
+struct RouteRequest: Codable {
+    let origin: Location
+    let destination: Location
+    let transportTypes: [TransportType]
+    let maxWalkingDistance: Int
+    let routePreference: RoutePreference
 }
 
-struct RouteSegment: Identifiable {
-    let id = UUID()
-    let type: TransportType
-    let time: Int
-    let occupancy: Int?
+struct Location: Codable {
+    let latitude: Double
+    let longitude: Double
 }
 
-enum TransportType {
-    case express
-    case bus
-    case subway
-    case walk
-    case bike
+enum TransportType: String, Codable, CaseIterable {
+    case WALK = "WALK"
+    case BUS = "BUS"
+    case METRO = "METRO"
+    case MINIBUS = "MINIBUS"
     
     var iconName: String {
         switch self {
-        case .express: return "tram.fill"
-        case .bus: return "bus.fill"
-        case .subway: return "subway.fill"
-        case .walk: return "figure.walk"
-        case .bike: return "bicycle"
-        }
-    }
-    
-    var color: String {
-        switch self {
-        case .express: return "blue"
-        case .bus: return "green"
-        case .subway: return "red"
-        case .walk: return "brown"
-        case .bike: return "orange"
+        case .WALK: return "figure.walk"
+        case .BUS: return "bus.fill"
+        case .METRO: return "tram.fill"
+        case .MINIBUS: return "van.fill"
         }
     }
     
     var description: String {
         switch self {
-        case .express: return "Express"
-        case .bus: return "Bus"
-        case .subway: return "Subway"
-        case .walk: return "Walk"
-        case .bike: return "Bike"
+        case .WALK: return "Walk"
+        case .BUS: return "Bus"
+        case .METRO: return "Metro"
+        case .MINIBUS: return "Minibus"
         }
     }
 }
 
-enum RouteTag: String {
-    case fastest = "Fastest"
-    case cheapest = "Cheapest"
-    case accessible = "Accessible"
-    case recommended = "Recommended"
+enum RoutePreference: String, Codable {
+    case FASTEST
+    case CHEAPEST
+    case LEAST_OCCUPIED
+}
+
+// MARK: - Response Models
+struct RouteResponse: Codable {
+    let success: Bool
+    let data: RouteData
+}
+
+struct RouteData: Codable {
+    let totalTime: Int
+    let totalDistance: Double
+    let totalCost: Double
+    let transfers: Int
+    let segments: [RouteSegment]
+}
+
+struct RouteSegment: Codable, Identifiable {
+    var id: UUID { UUID() } // Computed property since we can't decode it
+    let from: String
+    let to: String
+    let type: TransportType
+    let time: Int
+    let cost: Double
+    let distance: Double
+    let waitTime: Int
+    let fromName: String
+    let toName: String
+    let path: [Location]
+    let description: String
+    let routeId: String?
+    let routeName: String?
+    let vehicleId: String?
+}
+
+// MARK: - View Models
+struct RouteViewModel {
+    let origin: String
+    let destination: String
+    let departureTime: Date
+    let arrivalTime: Date
+    let segments: [RouteSegment]
+    let totalTime: Int
+    let totalDistance: Double
+    let totalCost: Double
+    let transfers: Int
+    
+    // Mock data for additional metrics
+    var occupancy: Int = Int.random(in: 30...90)
+    var co2Saved: Double {
+        // Mock calculation based on distance and occupancy
+        return (totalDistance * Double(occupancy)) / 1000
+    }
+    var calories: Int {
+        // Mock calculation based on walking segments
+        let walkingSegments = segments.filter { $0.type == .WALK }
+        return walkingSegments.reduce(0) { $0 + Int($1.distance * 0.3) }
+    }
 }

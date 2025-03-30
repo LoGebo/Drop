@@ -9,11 +9,13 @@ import SwiftUI
 
 struct RoutesView: View {
     @StateObject private var viewModel = RoutesViewModel()
+    @State private var searchText = ""
+    @State private var showResults = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     // Search Form
                     VStack(spacing: 16) {
                         HStack(spacing: 12) {
@@ -30,13 +32,13 @@ struct RoutesView: View {
                             }
                             
                             VStack(spacing: 12) {
-                                TextField("Current Location", text: $viewModel.currentLocation)
+                                TextField("Origin", text: .constant("Current Location"))
                                     .textFieldStyle(.plain)
                                     .padding()
                                     .background(Color(UIColor.tertiarySystemBackground))
                                     .cornerRadius(12)
                                 
-                                TextField("Where to?", text: $viewModel.destination)
+                                TextField("Destination", text: $searchText)
                                     .textFieldStyle(.plain)
                                     .padding()
                                     .background(Color(UIColor.tertiarySystemBackground))
@@ -44,8 +46,18 @@ struct RoutesView: View {
                             }
                         }
                         
-                        Button(action: { viewModel.findRoutes() }) {
-                            if viewModel.isSearching {
+                        Button(action: {
+                            Task {
+                                await viewModel.fetchRoute(
+                                    from: Location(latitude: 25.684533, longitude: -100.306892),
+                                    to: Location(latitude: 25.679100, longitude: -100.284000)
+                                )
+                                withAnimation(.spring()) {
+                                    showResults = true
+                                }
+                            }
+                        }) {
+                            if viewModel.isLoading {
                                 ProgressView()
                                     .progressViewStyle(.circular)
                                     .tint(.black)
@@ -65,15 +77,100 @@ struct RoutesView: View {
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(20)
                     
-                    if viewModel.showingResults {
-                        // Route Results
-                        ForEach(viewModel.routes) { route in
-                            RouteCard(route: route)
-                                .transition(.scale)
+                    if showResults, let route = viewModel.currentRoute {
+                        // Route Header Card
+                        VStack(spacing: 12) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    HStack(spacing: 8) {
+                                        Circle()
+                                            .fill(.green)
+                                            .frame(width: 8, height: 8)
+                                        Text("Current Location")
+                                        Image(systemName: "arrow.right")
+                                            .foregroundStyle(.secondary)
+                                        Text("Destination")
+                                    }
+                                }
+                            }
+                            
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("Departure")
+                                        .foregroundStyle(.secondary)
+                                    Text(viewModel.formatTime(route.departureTime))
+                                }
+                                
+                                Image(systemName: "arrow.right")
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal)
+                                
+                                VStack(alignment: .leading) {
+                                    Text("Arrival")
+                                        .foregroundStyle(.secondary)
+                                    Text(viewModel.formatTime(route.arrivalTime))
+                                }
+                                
+                                Spacer()
+                            }
                         }
+                        .padding()
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .padding(.horizontal)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        
+                        // Route Timeline
+                        VStack(spacing: 0) {
+                            ForEach(Array(route.segments.enumerated()), id: \.element.id) { index, segment in
+                                RouteSegmentView(
+                                    segment: segment,
+                                    isFirst: index == 0,
+                                    isLast: index == route.segments.count - 1,
+                                    previousType: index > 0 ? route.segments[index - 1].type : nil
+                                )
+                            }
+                        }
+                        .padding(.horizontal)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        
+                        // Journey Achievements
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Journey Achievements")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                            
+                            HStack(spacing: 20) {
+                                AchievementView(
+                                    icon: "person.2.fill",
+                                    value: "\(route.occupancy)%",
+                                    label: "Occupancy",
+                                    color: .blue
+                                )
+                                
+                                AchievementView(
+                                    icon: "leaf.fill",
+                                    value: String(format: "%.1f", route.co2Saved),
+                                    label: "kg CO₂ Saved",
+                                    color: .green
+                                )
+                                
+                                AchievementView(
+                                    icon: "flame.fill",
+                                    value: "\(route.calories)",
+                                    label: "Calories",
+                                    color: .orange
+                                )
+                            }
+                        }
+                        .padding()
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .padding(.horizontal)
+                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
-                .padding()
+                .padding(.vertical)
             }
             .background(Color(UIColor.systemBackground))
             .navigationTitle("Routes")
@@ -92,106 +189,107 @@ struct RoutesView: View {
     }
 }
 
-struct RouteCard: View {
-    let route: TransitRoute
+struct RouteSegmentView: View {
+    let segment: RouteSegment
+    let isFirst: Bool
+    let isLast: Bool
+    let previousType: TransportType?
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("\(route.from) → \(route.to)")
-                        .font(.headline)
-                    Text("\(route.totalTime) min • $\(String(format: "%.2f", route.price))")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
+        HStack(spacing: 16) {
+            // Timeline
+            VStack(spacing: 0) {
+                Circle()
+                    .fill(segmentColor)
+                    .frame(width: 40, height: 40)
+                    .overlay {
+                        Image(systemName: segment.type.iconName)
+                            .foregroundStyle(.white)
+                    }
                 
-                Spacer()
-                
-                if let tag = route.tag {
-                    Text(tag.rawValue)
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(tagColor(for: tag).opacity(0.2))
-                        .foregroundColor(tagColor(for: tag))
-                        .clipShape(Capsule())
+                if !isLast {
+                    Rectangle()
+                        .fill(segmentColor)
+                        .frame(width: 4)
+                        .frame(height: 80)
                 }
             }
             
-            // Route Segments
-            VStack(spacing: 12) {
-                ForEach(route.segments) { segment in
-                    HStack(spacing: 12) {
-                        Image(systemName: segment.type.iconName)
-                            .foregroundStyle(.green)
-                        
-                        Text(segment.type.description)
-                            .font(.subheadline)
-                        
-                        Spacer()
-                        
-                        if let occupancy = segment.occupancy {
-                            Text("\(occupancy)%")
-                                .font(.caption.weight(.medium))
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(occupancyColor(occupancy).opacity(0.2))
-                                .foregroundColor(occupancyColor(occupancy))
-                                .clipShape(Capsule())
-                        }
-                        
-                        Text("\(segment.time) min")
+            VStack(alignment: .leading, spacing: 8) {
+                Text(segment.description)
+                    .font(.body)
+                
+                if let routeName = segment.routeName {
+                    HStack {
+                        Circle()
+                            .fill(.purple)
+                            .frame(width: 8, height: 8)
+                        Text(routeName)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                 }
+                
+                Text(String(format: "%.0f m", segment.distance))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             
-            HStack {
-                Image(systemName: "leaf.fill")
-                    .foregroundColor(.green)
-                Text("\(String(format: "%.1f", route.co2Saved)) kg CO₂ saved")
-                    .font(.caption)
-                    .foregroundStyle(.green)
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Text("Select")
-                        .font(.subheadline.weight(.medium))
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 8)
-                        .background(Color.green)
-                        .foregroundColor(.black)
-                        .clipShape(Capsule())
+            Spacer()
+            
+            Text("\(segment.time) min")
+                .font(.subheadline)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(.black)
+                .foregroundStyle(.white)
+                .clipShape(Capsule())
+        }
+        .padding(.vertical, 8)
+    }
+    
+    var segmentColor: Color {
+        switch segment.type {
+        case .WALK:
+            return .green
+        case .METRO:
+            return .purple
+        case .BUS:
+            return .blue
+        case .MINIBUS:
+            return .orange
+        }
+    }
+}
+
+struct AchievementView: View {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Circle()
+                .fill(color)
+                .frame(width: 44, height: 44)
+                .overlay {
+                    Image(systemName: icon)
+                        .font(.title3)
+                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.scale)
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(15)
-    }
-    
-    private func tagColor(for tag: RouteTag) -> Color {
-        switch tag {
-        case .fastest: return .green
-        case .cheapest: return .blue
-        case .accessible: return .orange
-        case .recommended: return .purple
-        }
-    }
-    
-    private func occupancyColor(_ value: Int) -> Color {
-        switch value {
-        case 0...50: return .green
-        case 51...80: return .orange
-        default: return .red
+            
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 }
 
 #Preview {
-    MainTabView()
+    RoutesView()
 }
