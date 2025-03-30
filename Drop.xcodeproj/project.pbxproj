@@ -20,6 +20,8 @@
 		A306AE4C2D98D21F00F17A7C /* RoutesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */; };
 		A306AE4E2D98D22C00F17A7C /* RoutesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */; };
 		A306AE582D99278D00F17A7C /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE572D99278D00F17A7C /* LocationPickerView.swift */; };
+		A35572C92D997E2E00A5799A /* EmergencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35572C82D997E2D00A5799A /* EmergencyView.swift */; };
+		A35572CB2D997E3C00A5799A /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35572CA2D997E3C00A5799A /* ReportView.swift */; };
 		BE58A7882D9954EE0067B4B6 /* MetroVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A7872D9954EE0067B4B6 /* MetroVehicle.swift */; };
 		BE58A78A2D9954F90067B4B6 /* RealTimeMetroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A7892D9954F90067B4B6 /* RealTimeMetroService.swift */; };
 		BE58A78C2D9955050067B4B6 /* MetroMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A78B2D9955050067B4B6 /* MetroMapViewModel.swift */; };
@@ -61,6 +63,8 @@
 		A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesViewModel.swift; sourceTree = "<group>"; };
 		A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesModel.swift; sourceTree = "<group>"; };
 		A306AE572D99278D00F17A7C /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
+		A35572C82D997E2D00A5799A /* EmergencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyView.swift; sourceTree = "<group>"; };
+		A35572CA2D997E3C00A5799A /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		BE58A7872D9954EE0067B4B6 /* MetroVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroVehicle.swift; sourceTree = "<group>"; };
 		BE58A7892D9954F90067B4B6 /* RealTimeMetroService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeMetroService.swift; sourceTree = "<group>"; };
 		BE58A78B2D9955050067B4B6 /* MetroMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroMapViewModel.swift; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 				A306AE332D98C30B00F17A7C /* HomeView.swift */,
 				A306AE352D98C33B00F17A7C /* HomeViewModel.swift */,
 				A306AE372D98C34900F17A7C /* HomeModel.swift */,
+				A35572C82D997E2D00A5799A /* EmergencyView.swift */,
+				A35572CA2D997E3C00A5799A /* ReportView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -344,7 +350,9 @@
 				BE58A78E2D9955110067B4B6 /* MetroAnnotationView.swift in Sources */,
 				BE58A7912D9960F40067B4B6 /* RoutesMapBackground.swift in Sources */,
 				BE58A78C2D9955050067B4B6 /* MetroMapViewModel.swift in Sources */,
+				A35572CB2D997E3C00A5799A /* ReportView.swift in Sources */,
 				A306AE452D98D01000F17A7C /* UserModel.swift in Sources */,
+				A35572C92D997E2E00A5799A /* EmergencyView.swift in Sources */,
 				A306AE3F2D98CE2400F17A7C /* AlertsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

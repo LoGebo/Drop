@@ -152,18 +152,39 @@ struct HomeView: View {
     
     private var emergencyButtonSection: some View {
         VStack(spacing: 12) {
-            Button(action: {}) {
-                Label("Emergency Button", systemImage: "shield.fill")
-                    .font(.body.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
+            NavigationLink(destination: EmergencyView()) {
+                Label {
+                    Text("Emergency Assistance")
+                        .font(.body.weight(.semibold))
+                } icon: {
+                    Image(systemName: "bell.fill")
+                        .imageScale(.large)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(15)
             }
             .buttonStyle(.scale)
             
-            Text("Tap in case of emergency to alert authorities and driver")
+            NavigationLink(destination: ReportView()) {
+                Label {
+                    Text("Report an Issue")
+                        .font(.body.weight(.semibold))
+                } icon: {
+                    Image(systemName: "exclamationmark.bubble.fill")
+                        .imageScale(.large)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color(UIColor.secondarySystemBackground))
+                .foregroundColor(.primary)
+                .cornerRadius(15)
+            }
+            .buttonStyle(.scale)
+            
+            Text("Tap in case of emergency to alert authorities")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
