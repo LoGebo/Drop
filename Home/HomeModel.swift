@@ -8,11 +8,17 @@
 import SwiftUI
 import Foundation
 
-struct Station: Identifiable {
-    let id = UUID()
-    let name: String
-    let distance: Double
-    let lines: [TransitLine]
+enum StopStatus {
+    case completed
+    case current
+    case upcoming
+}
+
+enum LineColor {
+    case red
+    case blue
+    case green
+    case yellow
 }
 
 struct TransitLine: Identifiable {
@@ -21,8 +27,11 @@ struct TransitLine: Identifiable {
     let color: LineColor
 }
 
-enum LineColor {
-    case red, blue, green, yellow
+struct Station: Identifiable {
+    let id = UUID()
+    let name: String
+    let distance: Double
+    let lines: [TransitLine]
 }
 
 struct Route: Identifiable {
@@ -49,18 +58,8 @@ struct TripStop {
     let detail: String
 }
 
-enum StopStatus {
-    case completed
-    case current
-    case upcoming
-}
-
 struct HomeModel: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
-}
-
-#Preview {
-    HomeModel()
 }
