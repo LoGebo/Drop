@@ -29,7 +29,7 @@ struct HomeView: View {
                 .padding(.vertical)
             }
             .background(Color(UIColor.systemBackground))
-            .navigationTitle("TransitGo")
+            .navigationTitle("Drop")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -86,7 +86,7 @@ struct HomeView: View {
         .padding(.horizontal)
     }
     
-    private func currentTripSection(trip: Trip) -> some View {
+    private func currentTripSection(trip: HomeModel.Trip) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Current Trip")
@@ -200,7 +200,7 @@ struct RouteTextField: View {
 }
 
 struct StationCard: View {
-    let station: Station
+    let station: HomeModel.Station
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -225,7 +225,7 @@ struct StationCard: View {
                             .font(.caption.weight(.medium))
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                            .background(lineColor(for: line.color))
+                            .background(line.color)
                             .foregroundColor(.white)
                             .clipShape(Capsule())
                     }
@@ -237,19 +237,10 @@ struct StationCard: View {
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(15)
     }
-    
-    private func lineColor(for color: LineColor) -> Color {
-        switch color {
-        case .red: return .red
-        case .blue: return .blue
-        case .green: return .green
-        case .yellow: return Color(red: 0.9, green: 0.8, blue: 0.0)
-        }
-    }
 }
 
 struct FavoriteRouteCard: View {
-    let route: Route
+    let route: HomeModel.Route
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -292,7 +283,7 @@ struct FavoriteRouteCard: View {
 }
 
 struct CurrentTripView: View {
-    let trip: Trip
+    let trip: HomeModel.Trip
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -361,7 +352,7 @@ struct CurrentTripView: View {
 }
 
 struct TripStopView: View {
-    let stop: TripStop
+    let stop: HomeModel.TripStop
     let isLast: Bool
     
     var body: some View {

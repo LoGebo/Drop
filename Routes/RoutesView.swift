@@ -281,10 +281,10 @@ struct RoutesView: View {
                     initialLocation: destinationLocation
                 )
             }
-            .onChange(of: manualLocation) { _ in
+            .onChange(of: manualLocation, initial: false) { oldValue, newValue in
                 fetchRouteIfNeeded()
             }
-            .onChange(of: destinationLocation) { _ in
+            .onChange(of: destinationLocation, initial: false) { oldValue, newValue in
                 fetchRouteIfNeeded()
             }
         }
