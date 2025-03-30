@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A306AE342D98C30B00F17A7C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE332D98C30B00F17A7C /* HomeView.swift */; };
+		A306AE362D98C33B00F17A7C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE352D98C33B00F17A7C /* HomeViewModel.swift */; };
+		A306AE382D98C34900F17A7C /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE372D98C34900F17A7C /* HomeModel.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A306AE142D98C2CD00F17A7C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +33,9 @@
 		A306AE032D98C2CC00F17A7C /* Drop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A306AE132D98C2CD00F17A7C /* DropTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A306AE1D2D98C2CD00F17A7C /* DropUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A306AE332D98C30B00F17A7C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A306AE352D98C33B00F17A7C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		A306AE372D98C34900F17A7C /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +84,7 @@
 		A306ADFA2D98C2CC00F17A7C = {
 			isa = PBXGroup;
 			children = (
+				A306AE322D98C2FA00F17A7C /* Home */,
 				A306AE052D98C2CC00F17A7C /* Drop */,
 				A306AE162D98C2CD00F17A7C /* DropTests */,
 				A306AE202D98C2CD00F17A7C /* DropUITests */,
@@ -90,6 +100,16 @@
 				A306AE1D2D98C2CD00F17A7C /* DropUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A306AE322D98C2FA00F17A7C /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				A306AE332D98C30B00F17A7C /* HomeView.swift */,
+				A306AE352D98C33B00F17A7C /* HomeViewModel.swift */,
+				A306AE372D98C34900F17A7C /* HomeModel.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +256,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A306AE342D98C30B00F17A7C /* HomeView.swift in Sources */,
+				A306AE382D98C34900F17A7C /* HomeModel.swift in Sources */,
+				A306AE362D98C33B00F17A7C /* HomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
