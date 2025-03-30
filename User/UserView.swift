@@ -9,170 +9,171 @@ import SwiftUI
 
 struct UserView: View {
     @StateObject private var viewModel = UserViewModel()
-    @Environment(\.colorScheme) var colorScheme
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    // Header with Logout button
-                    HStack {
-                        Text("Profile")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            viewModel.logout()
-                        }) {
-                            Text("Log Out")
-                                .foregroundColor(.black)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 20)
-                                .background(
-                                    Capsule()
-                                        .fill(Color.white)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    // User Profile Card
+                    VStack(spacing: 20) {
+                        HStack(spacing: 15) {
+                            Circle()
+                                .fill(Color(UIColor.secondarySystemBackground))
+                                .frame(width: 80, height: 80)
+                                .overlay(
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(.primary)
                                 )
+                            
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(viewModel.user.name)
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                
+                                Text(viewModel.user.email)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        // Settings Toggles
+                        VStack(spacing: 15) {
+                            Toggle("Notifications", isOn: $viewModel.notificationsEnabled)
+                                .toggleStyle(SwitchToggleStyle(tint: .green))
+                            
+                            Toggle("Location Services", isOn: $viewModel.locationServicesEnabled)
+                                .toggleStyle(SwitchToggleStyle(tint: .green))
+                            
+                            Toggle("Dark Mode", isOn: $isDarkMode)
+                                .toggleStyle(SwitchToggleStyle(tint: .green))
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.top)
-                    .padding(.bottom, 20)
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(15)
                     
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            // User Profile Card
-                            VStack(spacing: 20) {
-                                HStack(spacing: 15) {
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 80, height: 80)
-                                    
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        Text(viewModel.user.name)
-                                            .font(.title2)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.white)
-                                        
-                                        Text(viewModel.user.email)
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
-                                    }
-                                    
-                                    Spacer()
-                                }
+                    // Payment Methods
+                    VStack(spacing: 15) {
+                        Text("Payment Methods")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        ForEach(viewModel.paymentMethods) { payment in
+                            HStack {
+                                Image(systemName: "creditcard")
+                                    .font(.title2)
+                                    .foregroundStyle(.secondary)
                                 
-                                // Settings Toggles
-                                VStack(spacing: 15) {
-                                    Toggle("Notifications", isOn: $viewModel.notificationsEnabled)
-                                        .toggleStyle(SwitchToggleStyle(tint: .white))
-                                    
-                                    Toggle("Location Services", isOn: $viewModel.locationServicesEnabled)
-                                        .toggleStyle(SwitchToggleStyle(tint: .white))
-                                    
-                                    Toggle("Dark Mode", isOn: $viewModel.darkModeEnabled)
-                                        .toggleStyle(SwitchToggleStyle(tint: .white))
-                                }
-                            }
-                            .padding()
-                            .background(Color(UIColor.systemGray6))
-                            .cornerRadius(15)
-                            
-                            // Payment Methods
-                            VStack(spacing: 15) {
-                                Text("Payment Methods")
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                ForEach(viewModel.paymentMethods) { payment in
-                                    HStack {
-                                        Image(systemName: "creditcard")
-                                            .font(.title2)
-                                            .foregroundColor(.gray)
-                                        
-                                        VStack(alignment: .leading, spacing: 5) {
-                                            Text(paymentTypeString(payment.type))
-                                                .font(.headline)
-                                                .foregroundColor(.white)
-                                            
-                                            Text("Ending in \(payment.lastFourDigits)")
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.white)
-                                            .frame(width: 30, height: 30)
-                                    }
-                                    .padding()
-                                    .background(Color(UIColor.systemGray5))
-                                    .cornerRadius(15)
-                                }
-                                
-                                // Add Payment Button
-                                Button(action: {
-                                    viewModel.addPaymentMethod()
-                                }) {
-                                    Text("Add Payment Method")
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(paymentTypeString(payment.type))
                                         .font(.headline)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.green)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(10)
+                                    
+                                    Text("Ending in \(payment.lastFourDigits)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
                                 }
-                            }
-                            .padding()
-                            .background(Color(UIColor.systemGray6))
-                            .cornerRadius(15)
-                            
-                            // Preferences
-                            VStack(spacing: 15) {
-                                Text("Preferences")
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 
-                                Menu {
-                                    ForEach(PreferenceType.allCases) { language in
-                                        Button(language.rawValue) {
-                                            viewModel.selectedLanguage = language
-                                        }
-                                    }
-                                } label: {
-                                    HStack {
-                                        Text(viewModel.selectedLanguage.rawValue)
-                                            .foregroundColor(.black)
-                                        Spacer()
-                                        Image(systemName: "chevron.down")
-                                            .foregroundColor(.black)
-                                    }
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(10)
+                                Spacer()
+                                
+                                if payment.isSelected {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
                                 }
                             }
                             .padding()
-                            .background(Color(UIColor.systemGray6))
+                            .background(Color(UIColor.tertiarySystemBackground))
                             .cornerRadius(15)
                         }
-                        .padding(.horizontal)
+                        
+                        // Add Payment Button
+                        Button(action: {
+                            viewModel.addPaymentMethod()
+                        }) {
+                            Label("Add Payment Method", systemImage: "plus.circle.fill")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.green)
+                                .foregroundColor(.black)
+                                .cornerRadius(15)
+                        }
+                        .buttonStyle(.scale)
+                    }
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(15)
+                    
+                    // Preferences
+                    VStack(spacing: 15) {
+                        Text("Preferences")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Menu {
+                            ForEach(PreferenceType.allCases) { language in
+                                Button(language.rawValue) {
+                                    viewModel.selectedLanguage = language
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(viewModel.selectedLanguage.rawValue)
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                            }
+                            .padding()
+                            .background(Color(UIColor.tertiarySystemBackground))
+                            .cornerRadius(15)
+                        }
+                    }
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(15)
+                    
+                    Spacer()
+                        .frame(height: 30)
+                    
+                    Button(action: {
+                        viewModel.logout()
+                    }) {
+                        Text("Log Out")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(.red)
+                            }
+                            .foregroundColor(.white)
+                    }
+                    .buttonStyle(.scale)
+                    .padding(.bottom, 50)
+                }
+                .padding()
+            }
+            .background(Color(UIColor.systemBackground))
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {}) {
+                        Image(systemName: "gearshape.fill")
+                            .imageScale(.large)
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(.primary)
                     }
                 }
-                
             }
-            .preferredColorScheme(.dark)
         }
-        .navigationBarHidden(true)
     }
     
     private func paymentTypeString(_ type: PaymentType) -> String {
@@ -185,36 +186,6 @@ struct UserView: View {
     }
 }
 
-struct CustomTabBar: View {
-    var body: some View {
-        HStack(spacing: 0) {
-            TabBarItem(icon: "house.fill", label: "Home", isSelected: false)
-            TabBarItem(icon: "map", label: "Routes", isSelected: false)
-            TabBarItem(icon: "bell", label: "Alerts", isSelected: false)
-            TabBarItem(icon: "person", label: "Profile", isSelected: true)
-        }
-        .padding(.vertical, 8)
-        .background(Color(UIColor.systemGray6))
-    }
-}
-
-struct TabBarItem: View {
-    let icon: String
-    let label: String
-    let isSelected: Bool
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .foregroundColor(isSelected ? .primary : .gray)
-            Text(label)
-                .font(.caption)
-                .foregroundColor(isSelected ? .primary : .gray)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
 #Preview {
-    UserView()
+    MainTabView()
 }

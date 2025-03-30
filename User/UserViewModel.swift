@@ -17,7 +17,6 @@ class UserViewModel: ObservableObject {
     
     @Published var notificationsEnabled = true
     @Published var locationServicesEnabled = true
-    @Published var darkModeEnabled = true
     
     @Published var paymentMethods: [PaymentMethod] = [
         PaymentMethod(
@@ -40,10 +39,6 @@ class UserViewModel: ObservableObject {
     
     func toggleLocationServices() {
         locationServicesEnabled.toggle()
-    }
-    
-    func toggleDarkMode() {
-        darkModeEnabled.toggle()
     }
     
     func logout() {

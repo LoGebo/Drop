@@ -11,56 +11,34 @@ struct AlertsView: View {
     @StateObject private var viewModel = AlertsViewModel()
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    // Header with Clear All button
-                    HStack {
-                        Text("Alerts")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            viewModel.clearAllAlerts()
-                        }) {
-                            Text("Clear All")
-                                .foregroundColor(.black)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 20)
-                                .background(
-                                    Capsule()
-                                        .fill(Color.white)
-                                )
-                        }
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 15) {
+                    ForEach(viewModel.alerts) { alert in
+                        AlertCardView(alert: alert)
                     }
-                    .padding(.horizontal)
-                    .padding(.top)
-                    .padding(.bottom, 20)
-                    
-                    // Alert List
-                    ScrollView {
-                        VStack(spacing: 15) {
-                            ForEach(viewModel.alerts) { alert in
-                                AlertCardView(alert: alert)
-                            }
-                        }
-                        .padding(.horizontal)
+                }
+                .padding()
+            }
+            .background(Color(UIColor.systemBackground))
+            .navigationTitle("Alerts")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { viewModel.clearAllAlerts() }) {
+                        Text("Clear All")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.green)
                     }
                 }
             }
-            .preferredColorScheme(.dark)
         }
-        .navigationBarHidden(true)
     }
 }
 
 struct AlertCardView: View {
     let alert: Alert
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
@@ -72,26 +50,24 @@ struct AlertCardView: View {
                 HStack {
                     Text(alert.title)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.primary)
                     
                     Spacer()
                     
                     Text(alert.timeAgo)
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.secondary)
                 }
                 
                 Text(alert.message)
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(UIColor.systemGray6))
-        )
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(12)
     }
     
     @ViewBuilder
@@ -127,5 +103,5 @@ struct AlertCardView: View {
 }
 
 #Preview {
-    AlertsView()
+    MainTabView()
 }

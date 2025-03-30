@@ -32,7 +32,7 @@ enum TransportType {
     case walk
     case bike
     
-    var icon: String {
+    var iconName: String {
         switch self {
         case .express: return "tram.fill"
         case .bus: return "bus.fill"
@@ -52,7 +52,7 @@ enum TransportType {
         }
     }
     
-    var name: String {
+    var description: String {
         switch self {
         case .express: return "Express"
         case .bus: return "Bus"
