@@ -94,17 +94,16 @@ class SocketIOClient {
             if let handlers = self.eventHandlers["vehicleUpdate"] {
                 let emitter = SocketAckEmitter(socket: self, ackNum: 0)
                 
-                // Crear IDs y líneas que coincidan con el formato especificado
-                let lineOptions = ["L1", "L2", "L3"]
-                let lineId = lineOptions.randomElement()!
-                let vehicleId = "metro_\(lineId)_\(Int.random(in: 1...5))"
+                // Crear ID y línea fijos para mantener un solo vehículo
+                let lineId = "L1"
+                let vehicleId = "metro_L1_5"
                 
                 // Simular actualización de vehículo con el formato especificado
                 let vehicleData: [String: Any] = [
                     "id": vehicleId,
                     "location": [
-                        "latitude": 25.6866 + Double.random(in: -0.01...0.01),
-                        "longitude": -100.3161 + Double.random(in: -0.01...0.01)
+                        "latitude": 25.6866 + Double.random(in: -0.008...0.008),
+                        "longitude": -100.3161 + Double.random(in: -0.008...0.008)
                     ],
                     "occupancy": Int.random(in: 10...90),
                     "routeId": lineId,

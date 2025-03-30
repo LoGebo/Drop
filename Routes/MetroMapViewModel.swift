@@ -89,7 +89,11 @@ class MetroMapViewModel: ObservableObject {
     // MARK: - Métodos privados
     
     private func handleVehicleUpdate(_ vehicle: MetroVehicle) {
-        // Actualizar el vehículo en el diccionario
+        // Limpiar vehículos antiguos antes de agregar el nuevo
+        // Esto asegura que solo tengamos un vehículo en el mapa
+        vehicles.removeAll()
+        
+        // Añadir o actualizar el vehículo actual
         vehicles[vehicle.id] = vehicle
         
         // Si este vehículo está seleccionado actualmente, actualizar el selectedVehicle

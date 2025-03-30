@@ -24,6 +24,7 @@
 		BE58A78A2D9954F90067B4B6 /* RealTimeMetroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A7892D9954F90067B4B6 /* RealTimeMetroService.swift */; };
 		BE58A78C2D9955050067B4B6 /* MetroMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A78B2D9955050067B4B6 /* MetroMapViewModel.swift */; };
 		BE58A78E2D9955110067B4B6 /* MetroAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A78D2D9955110067B4B6 /* MetroAnnotationView.swift */; };
+		BE58A7912D9960F40067B4B6 /* RoutesMapBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE58A7902D9960F40067B4B6 /* RoutesMapBackground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		BE58A7892D9954F90067B4B6 /* RealTimeMetroService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeMetroService.swift; sourceTree = "<group>"; };
 		BE58A78B2D9955050067B4B6 /* MetroMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroMapViewModel.swift; sourceTree = "<group>"; };
 		BE58A78D2D9955110067B4B6 /* MetroAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroAnnotationView.swift; sourceTree = "<group>"; };
+		BE58A7902D9960F40067B4B6 /* RoutesMapBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesMapBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -174,6 +176,7 @@
 				A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */,
 				A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */,
 				A306AE572D99278D00F17A7C /* LocationPickerView.swift */,
+				BE58A7902D9960F40067B4B6 /* RoutesMapBackground.swift */,
 			);
 			path = Routes;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				A306AE432D98D00400F17A7C /* UserView.swift in Sources */,
 				A306AE4C2D98D21F00F17A7C /* RoutesViewModel.swift in Sources */,
 				BE58A78E2D9955110067B4B6 /* MetroAnnotationView.swift in Sources */,
+				BE58A7912D9960F40067B4B6 /* RoutesMapBackground.swift in Sources */,
 				BE58A78C2D9955050067B4B6 /* MetroMapViewModel.swift in Sources */,
 				A306AE452D98D01000F17A7C /* UserModel.swift in Sources */,
 				A306AE3F2D98CE2400F17A7C /* AlertsViewModel.swift in Sources */,
