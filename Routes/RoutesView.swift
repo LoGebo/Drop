@@ -6,11 +6,39 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct RoutesView: View {
     @StateObject private var viewModel = RoutesViewModel()
     @State private var searchText = ""
     @State private var showResults = false
+    @State private var showSearchResults = false
+    @State private var selectedDestination: MKLocalSearchCompletion?
+    @State private var showLocationPicker = false
+    @State private var showDestinationPicker = false
+    @State private var manualLocation: CLLocation?
+    @State private var destinationLocation: CLLocation?
+    
+    private var hasValidLocations: Bool {
+        return (manualLocation != nil || viewModel.currentLocation != nil) && destinationLocation != nil
+    }
+    
+    private func fetchRouteIfNeeded() {
+        guard hasValidLocations else { return }
+        Task {
+            if let destination = destinationLocation {
+                let location = Location(
+                    latitude: destination.coordinate.latitude,
+                    longitude: destination.coordinate.longitude
+                )
+                await viewModel.fetchRoute(from: manualLocation, to: location)
+                withAnimation(.spring()) {
+                    showResults = viewModel.currentRoute != nil
+                    showSearchResults = false
+                }
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -32,30 +60,71 @@ struct RoutesView: View {
                             }
                             
                             VStack(spacing: 12) {
-                                TextField("Origin", text: .constant("Current Location"))
-                                    .textFieldStyle(.plain)
-                                    .padding()
-                                    .background(Color(UIColor.tertiarySystemBackground))
-                                    .cornerRadius(12)
+                                Button(action: {
+                                    showLocationPicker = true
+                                }) {
+                                    HStack {
+                                        Image(systemName: "location.fill")
+                                            .foregroundColor(.green)
+                                        if let location = manualLocation ?? viewModel.currentLocation {
+                                            Text("Selected Location")
+                                                .foregroundColor(.primary)
+                                            Spacer()
+                                            Text(String(format: "%.4f, %.4f",
+                                                      location.coordinate.latitude,
+                                                      location.coordinate.longitude))
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        } else {
+                                            Text("Set Current Location")
+                                                .foregroundColor(.secondary)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                                .background(Color(UIColor.tertiarySystemBackground))
+                                .cornerRadius(12)
+                                .onAppear {
+                                    viewModel.requestLocationPermission()
+                                }
                                 
-                                TextField("Destination", text: $searchText)
-                                    .textFieldStyle(.plain)
-                                    .padding()
-                                    .background(Color(UIColor.tertiarySystemBackground))
-                                    .cornerRadius(12)
+                                Button(action: {
+                                    showDestinationPicker = true
+                                }) {
+                                    HStack {
+                                        Image(systemName: "mappin.circle.fill")
+                                            .foregroundColor(.gray)
+                                        if let location = destinationLocation {
+                                            Text("Selected Destination")
+                                                .foregroundColor(.primary)
+                                            Spacer()
+                                            Text(String(format: "%.4f, %.4f",
+                                                      location.coordinate.latitude,
+                                                      location.coordinate.longitude))
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        } else {
+                                            Text("Set Destination")
+                                                .foregroundColor(.secondary)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                                .background(Color(UIColor.tertiarySystemBackground))
+                                .cornerRadius(12)
                             }
                         }
                         
                         Button(action: {
-                            Task {
-                                await viewModel.fetchRoute(
-                                    from: Location(latitude: 25.684533, longitude: -100.306892),
-                                    to: Location(latitude: 25.679100, longitude: -100.284000)
-                                )
-                                withAnimation(.spring()) {
-                                    showResults = true
-                                }
-                            }
+                            fetchRouteIfNeeded()
                         }) {
                             if viewModel.isLoading {
                                 ProgressView()
@@ -72,10 +141,25 @@ struct RoutesView: View {
                         .foregroundColor(.black)
                         .cornerRadius(15)
                         .buttonStyle(.scale)
+                        .disabled(!hasValidLocations)
                     }
                     .padding(16)
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(20)
+                    
+                    if let error = viewModel.locationError {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+                    
+                    if let error = viewModel.error {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .cornerRadius(12)
+                    }
                     
                     if showResults, let route = viewModel.currentRoute {
                         // Route Header Card
@@ -89,7 +173,7 @@ struct RoutesView: View {
                                         Text("Current Location")
                                         Image(systemName: "arrow.right")
                                             .foregroundStyle(.secondary)
-                                        Text("Destination")
+                                        Text(selectedDestination?.title ?? "Destination")
                                     }
                                 }
                             }
@@ -150,14 +234,14 @@ struct RoutesView: View {
                                 
                                 AchievementView(
                                     icon: "leaf.fill",
-                                    value: String(format: "%.1f", route.co2Saved),
+                                    value: String(format: "%.1f", viewModel.co2Saved),
                                     label: "kg CO₂ Saved",
                                     color: .green
                                 )
                                 
                                 AchievementView(
                                     icon: "flame.fill",
-                                    value: "\(route.calories)",
+                                    value: "\(viewModel.calories)",
                                     label: "Calories",
                                     color: .orange
                                 )
@@ -184,6 +268,24 @@ struct RoutesView: View {
                             .foregroundStyle(.primary)
                     }
                 }
+            }
+            .sheet(isPresented: $showLocationPicker) {
+                LocationPickerView(
+                    selectedLocation: $manualLocation,
+                    initialLocation: manualLocation ?? viewModel.currentLocation
+                )
+            }
+            .sheet(isPresented: $showDestinationPicker) {
+                LocationPickerView(
+                    selectedLocation: $destinationLocation,
+                    initialLocation: destinationLocation
+                )
+            }
+            .onChange(of: manualLocation) { _ in
+                fetchRouteIfNeeded()
+            }
+            .onChange(of: destinationLocation) { _ in
+                fetchRouteIfNeeded()
             }
         }
     }

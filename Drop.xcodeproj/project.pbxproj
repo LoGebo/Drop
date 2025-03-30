@@ -19,6 +19,7 @@
 		A306AE4A2D98D20F00F17A7C /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE492D98D20F00F17A7C /* RoutesView.swift */; };
 		A306AE4C2D98D21F00F17A7C /* RoutesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */; };
 		A306AE4E2D98D22C00F17A7C /* RoutesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */; };
+		A306AE582D99278D00F17A7C /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A306AE572D99278D00F17A7C /* LocationPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		A306AE492D98D20F00F17A7C /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
 		A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesViewModel.swift; sourceTree = "<group>"; };
 		A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesModel.swift; sourceTree = "<group>"; };
+		A306AE572D99278D00F17A7C /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -159,6 +161,7 @@
 				A306AE492D98D20F00F17A7C /* RoutesView.swift */,
 				A306AE4B2D98D21F00F17A7C /* RoutesViewModel.swift */,
 				A306AE4D2D98D22C00F17A7C /* RoutesModel.swift */,
+				A306AE572D99278D00F17A7C /* LocationPickerView.swift */,
 			);
 			path = Routes;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A306AE342D98C30B00F17A7C /* HomeView.swift in Sources */,
+				A306AE582D99278D00F17A7C /* LocationPickerView.swift in Sources */,
 				A306AE472D98D02300F17A7C /* UserViewModel.swift in Sources */,
 				A306AE4E2D98D22C00F17A7C /* RoutesModel.swift in Sources */,
 				A306AE4A2D98D20F00F17A7C /* RoutesView.swift in Sources */,
