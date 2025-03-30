@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 
 // Simulación local de Socket.IO para evitar dependencias externas
 class SocketManager {
@@ -86,6 +87,39 @@ class SocketIOClient {
     }
     
     private func startPeriodicUpdates() {
+        // Índice para rastrear la posición a lo largo de la línea 1
+        var segmentIndex = 0
+        var progress = 0.0
+        
+        // Coordenadas de la línea 1 para la simulación
+        let line1Coordinates: [CLLocationCoordinate2D] = [
+            // Talleres a San Bernabé
+            CLLocationCoordinate2D(latitude: 25.7544675, longitude: -100.3655645),
+            CLLocationCoordinate2D(latitude: 25.7483890, longitude: -100.3616380),
+            // San Bernabé a Unidad Modelo
+            CLLocationCoordinate2D(latitude: 25.7418717, longitude: -100.3549080),
+            CLLocationCoordinate2D(latitude: 25.7321485, longitude: -100.3472600),
+            // Unidad Modelo a Aztlán
+            CLLocationCoordinate2D(latitude: 25.7233152, longitude: -100.3425450),
+            CLLocationCoordinate2D(latitude: 25.7059242, longitude: -100.3424003),
+            // Aztlán a Penitenciaría
+            CLLocationCoordinate2D(latitude: 25.6987474, longitude: -100.3431880),
+            CLLocationCoordinate2D(latitude: 25.6893801, longitude: -100.3436221),
+            // Penitenciaría a Parque Fundidora
+            CLLocationCoordinate2D(latitude: 25.6875702, longitude: -100.3394937),
+            CLLocationCoordinate2D(latitude: 25.6861218, longitude: -100.3169480),
+            // Parque Fundidora a Cuauhtémoc
+            CLLocationCoordinate2D(latitude: 25.6839868, longitude: -100.2969920),
+            CLLocationCoordinate2D(latitude: 25.6832309, longitude: -100.2794460),
+            // Cuauhtémoc a Y Griega
+            CLLocationCoordinate2D(latitude: 25.6798275, longitude: -100.2480310),
+            CLLocationCoordinate2D(latitude: 25.6797233, longitude: -100.2473393),
+            // Y Griega a Exposición
+            CLLocationCoordinate2D(latitude: 25.6795043, longitude: -100.2454920),
+            CLLocationCoordinate2D(latitude: 25.6792699, longitude: -100.2433402),
+            CLLocationCoordinate2D(latitude: 25.6790443, longitude: -100.2414310)
+        ]
+        
         // Generar actualizaciones periódicas de vehículos (simulación)
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
             guard let self = self, self.isConnected else { return }
@@ -98,12 +132,49 @@ class SocketIOClient {
                 let lineId = "L1"
                 let vehicleId = "metro_L1_5"
                 
+                // Calcular la siguiente posición interpolando entre puntos
+                var latitude: Double = 0
+                var longitude: Double = 0
+                
+                // Si no hemos llegado al final de la línea
+                if segmentIndex < line1Coordinates.count - 1 {
+                    // Puntos actuales del segmento
+                    let startPoint = line1Coordinates[segmentIndex]
+                    let endPoint = line1Coordinates[segmentIndex + 1]
+                    
+                    // Interpolar entre los puntos según el progreso
+                    latitude = startPoint.latitude + (endPoint.latitude - startPoint.latitude) * progress
+                    longitude = startPoint.longitude + (endPoint.longitude - startPoint.longitude) * progress
+                    
+                    // Incrementar el progreso
+                    progress += 0.05
+                    
+                    // Si hemos completado este segmento, pasar al siguiente
+                    if progress >= 1.0 {
+                        segmentIndex += 1
+                        progress = 0.0
+                        
+                        // Si llegamos al final, regresar al inicio
+                        if segmentIndex >= line1Coordinates.count - 1 {
+                            segmentIndex = 0
+                        }
+                    }
+                } else {
+                    // Reiniciar al principio
+                    segmentIndex = 0
+                    progress = 0.0
+                    
+                    // Usar la primera coordenada
+                    latitude = line1Coordinates[0].latitude
+                    longitude = line1Coordinates[0].longitude
+                }
+                
                 // Simular actualización de vehículo con el formato especificado
                 let vehicleData: [String: Any] = [
                     "id": vehicleId,
                     "location": [
-                        "latitude": 25.6866 + Double.random(in: -0.008...0.008),
-                        "longitude": -100.3161 + Double.random(in: -0.008...0.008)
+                        "latitude": latitude,
+                        "longitude": longitude
                     ],
                     "occupancy": Int.random(in: 10...90),
                     "routeId": lineId,

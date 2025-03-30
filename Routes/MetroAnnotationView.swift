@@ -44,49 +44,81 @@ class MetroAnnotationView: MKAnnotationView {
     
     private func setupView() {
         // Configure annotation view
-        frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        centerOffset = CGPoint(x: 0, y: -20) // Offset to center the bottom of the pin
+        frame = CGRect(x: 0, y: 0, width: 44, height: 24) // Ajustado para forma más rectangular como un tren
+        centerOffset = CGPoint(x: 0, y: -12) // Centrado ajustado
         canShowCallout = true
         
         // Set up callout button
         let button = UIButton(type: .detailDisclosure)
         rightCalloutAccessoryView = button
         
+        // Add train container (background shape)
+        backgroundColor = .systemBlue
+        layer.cornerRadius = 8 // Menos redondeado, más como un vagón
+        
         // Add train image
-        trainImageView.frame = CGRect(x: 8, y: 8, width: 24, height: 24)
+        trainImageView.frame = CGRect(x: 4, y: 2, width: 20, height: 20)
         trainImageView.contentMode = .scaleAspectFit
         trainImageView.tintColor = .white
-        trainImageView.image = UIImage(systemName: "tram.fill")
+        trainImageView.image = UIImage(systemName: "tram")
         addSubview(trainImageView)
         
         // Add occupancy indicator
-        occupancyIndicator.frame = CGRect(x: 30, y: 0, width: 10, height: 10)
-        occupancyIndicator.layer.cornerRadius = 5
+        occupancyIndicator.frame = CGRect(x: 28, y: 2, width: 12, height: 12)
+        occupancyIndicator.layer.cornerRadius = 6
         occupancyIndicator.backgroundColor = .systemGreen
         addSubview(occupancyIndicator)
         
-        // Set up the background shape
-        backgroundColor = .systemBlue
-        layer.cornerRadius = 20
-        
-        // Add drop shadow
+        // Add drop shadow for 3D effect
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 0.3
+        layer.shadowOpacity = 0.4
         layer.shadowRadius = 2
         
         // Configurar elementos
         configureTrainImage()
         configureOccupancyIndicator()
+        
+        // Habilitar interacción del usuario
+        isEnabled = true
+        
+        // Agregar gesto de tap para mostrar la capacidad
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func handleTap() {
+        // Simular un toque en el botón de detalle para mostrar la capacidad
+        if let vehicle = self.annotation as? MetroVehicle {
+            // Mostrar la capacidad directamente
+            let capacityMessage = "Ocupación: \(vehicle.occupancy)% - \(vehicle.occupancyDescription)"
+            print(capacityMessage)
+            
+            // Hacer "bounce" del tren para indicar selección
+            UIView.animate(withDuration: 0.15, animations: {
+                self.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.15) {
+                    self.transform = CGAffineTransform.identity
+                }
+            })
+            
+            // Mostrar el callout
+            self.setSelected(true, animated: true)
+        }
     }
     
     // Configurar la imagen del tren según la línea
     private func configureTrainImage() {
-        // Usar una imagen de tren
-        if let trainImage = UIImage(systemName: "tram.fill") {
-            // Renderizar la imagen con el color de la línea
-            let colorizedImage = trainImage.withTintColor(lineColor, renderingMode: .alwaysOriginal)
-            trainImageView.image = colorizedImage
+        // Crear una capa de forma para el tren
+        layer.cornerRadius = 8
+        layer.masksToBounds = false
+        backgroundColor = lineColor
+        
+        // Usar una imagen de tren moderna
+        if let trainImage = UIImage(systemName: "tram") {
+            trainImageView.image = trainImage
+            trainImageView.tintColor = .white
         }
     }
     
@@ -132,20 +164,42 @@ class MetroAnnotationView: MKAnnotationView {
         // Update occupancy indicator
         occupancyIndicator.backgroundColor = vehicle.occupancyColor
         
+        // Actualizar texto del callout
+        let titleView = UILabel()
+        titleView.text = "Metro Line \(vehicle.routeId)"
+        titleView.font = UIFont.boldSystemFont(ofSize: 14)
+        
+        let subtitleView = UILabel()
+        subtitleView.text = "Ocupación: \(vehicle.occupancy)% - \(vehicle.occupancyDescription)"
+        subtitleView.font = UIFont.systemFont(ofSize: 12)
+        subtitleView.textColor = UIColor.darkGray
+        
         // Update animation for the occupancy indicator to pulse
         animateOccupancyIndicator()
     }
     
     // Método para animar el movimiento del tren a una nueva posición
     func animateMovement(from startCoordinate: CLLocationCoordinate2D, to endCoordinate: CLLocationCoordinate2D) {
+        // Calcular ángulo para orientar el tren en la dirección del movimiento
+        let angle = angleForCoordinate(from: startCoordinate, to: endCoordinate)
+        
         // Scale effect for movement animation
         UIView.animate(withDuration: 0.2, animations: {
-            self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2).rotated(by: angle)
         }, completion: { _ in
             UIView.animate(withDuration: 0.2) {
-                self.transform = .identity
+                self.transform = CGAffineTransform(rotationAngle: angle)
             }
         })
+    }
+    
+    // Calcular ángulo entre dos coordenadas para orientar el tren
+    private func angleForCoordinate(from start: CLLocationCoordinate2D, to end: CLLocationCoordinate2D) -> CGFloat {
+        let deltaLongitude = end.longitude - start.longitude
+        let deltaLatitude = end.latitude - start.latitude
+        let angle = atan2(deltaLongitude, deltaLatitude)
+        
+        return CGFloat(angle)
     }
     
     // MARK: - Private Animations
@@ -174,5 +228,15 @@ class MetroAnnotationView: MKAnnotationView {
         
         // Start animation
         animator?.startAnimation()
+    }
+    
+    // Para asegurar que el usuario pueda hacer clic
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // Expandir el área de toque para facilitar la interacción
+        let hitTestRect = bounds.insetBy(dx: -15, dy: -15)
+        if hitTestRect.contains(point) {
+            return self
+        }
+        return super.hitTest(point, with: event)
     }
 } 

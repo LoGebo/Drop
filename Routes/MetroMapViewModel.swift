@@ -75,6 +75,9 @@ class MetroMapViewModel: ObservableObject {
         selectedVehicle = vehicle
         showOccupancyChart = true
         
+        // Mostrar un mensaje en consola para verificar
+        print("Vehículo seleccionado: \(vehicle.id) - Ocupación: \(vehicle.occupancy)%")
+        
         // Notificar a otras vistas que un vehículo ha sido seleccionado
         NotificationCenter.default.post(
             name: .metroVehicleSelected,
