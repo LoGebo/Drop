@@ -68,6 +68,7 @@ struct RoutesView: View {
                     searchFormView
                         .padding(.horizontal)
                         .padding(.top, 0)
+                        .padding(.bottom, 16)
                     
                     Spacer(minLength: 0)
                     
